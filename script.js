@@ -75,9 +75,15 @@ const displayMovements=function(movements){
       containerMovements.insertAdjacentHTML('afterbegin',html);
     });
 };
-
 displayMovements(account1.movements);
 
+const createUserNames=function(accs){
+  accs.forEach(function(acc){
+    acc.username=acc.owner.toLowerCase().split(' ').map(name => name[0]).join('');
+    // console.log(acc.username);
+  });
+};
+createUserNames(accounts);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
