@@ -86,6 +86,9 @@ calcDisplayBalance(account1.movements);
 const calcDisplaySummary=function(movements){
   const income=movements.filter(mov => mov>0).reduce((acc,mov) => acc+mov,0);
   labelSumIn.textContent=`${income}€`;
+
+  const out=movements.filter(mov =>mov<0).reduce((acc,mov) => acc+mov,0);
+  labelSumOut.textContent=`${out}€`;
 };
 calcDisplaySummary(account1.movements);
 
