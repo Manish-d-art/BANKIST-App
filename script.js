@@ -142,6 +142,7 @@ btnTransfer.addEventListener('click',function(e){
         return account.username===inputTransferTo.value;
       });
       console.log(currentAccount);
+      inputTransferAmount.value=inputTransferTo.value='';
       if(amount>0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
         //doing transfer
         currentAccount.movements.push(-amount);
@@ -153,6 +154,20 @@ btnTransfer.addEventListener('click',function(e){
       console.log(amount,receiverAcc);
 });
 
+
+btnClose.addEventListener('click',function(e){
+  e.preventDefault();
+  if(inputCloseUsername.value===currentAccount.username && Number(inputClosePin.value)===currentAccount.pin){
+    const index=accounts.findIndex(function(account){
+      return account.username===currentAccount.username;
+    });
+    console.log(index);
+    accounts.splice(index,1);
+    containerApp.style.opacity=0;
+    inputCloseUsername.value=inputClosePin.value='';
+
+  }
+});
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
