@@ -154,6 +154,20 @@ btnTransfer.addEventListener('click',function(e){
       console.log(amount,receiverAcc);
 });
 
+btnLoan.addEventListener('click',function(e){
+  e.preventDefault();
+  const amount=Number(inputLoanAmount.value);
+  if(amount>0 && currentAccount.movements.some(function(mov){
+    return mov >= amount/10;
+  })){
+    currentAccount.movements.push(amount);
+
+    updateUI(currentAccount);
+    inputLoanAmount.value='';
+  }
+})
+
+
 
 btnClose.addEventListener('click',function(e){
   e.preventDefault();
