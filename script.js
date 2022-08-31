@@ -134,6 +134,11 @@ btnTransfer.addEventListener('click',function(e){
       const receiverAcc=accounts.find(function(account){
         return account.username===inputTransferTo.value;
       });
+      if(amount>0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
+        //doing transfer
+        currentAccount.movements.push(-amount);
+        receiverAcc.movements.push(amount);
+      }
       // console.log(receiverAcc);
 });
 
