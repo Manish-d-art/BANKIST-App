@@ -81,14 +81,14 @@ const calcDisplayBalance=function(movements){
   labelBalance.textContent=`${balance} EUR`;
 }
 
-const calcDisplaySummary=function(movements){
-  const income=movements.filter(mov => mov>0).reduce((acc,mov) => acc+mov,0);
+const calcDisplaySummary=function(account){
+  const income=account.movements.filter(mov => mov>0).reduce((acc,mov) => acc+mov,0);
   labelSumIn.textContent=`${income}€`; 
 
-  const out=movements.filter(mov =>mov<0).reduce((acc,mov) => acc+mov,0);
+  const out=account.movements.filter(mov =>mov<0).reduce((acc,mov) => acc+mov,0);
   labelSumOut.textContent=`${Math.abs(out)}€`;
 
-  const interest=movements.filter(mov =>mov>0).map(deposit =>(deposit*1.2)/100).filter((int,i,arr)=>{
+  const interest=account.movements.filter(mov =>mov>0).map(deposit =>(deposit*account.interestRate)/100).filter((int,i,arr)=>{
     return int>=1
   }).reduce((acc,int)=> acc+int,0);
   labelSumInterest.textContent=`${interest}€`;
@@ -99,7 +99,6 @@ const calcDisplaySummary=function(movements){
 const createUserNames=function(accs){
   accs.forEach(function(acc){
     acc.username=acc.owner.toLowerCase().split(' ').map(name => name[0]).join('');
-    // console.log(acc.username); 
   });
 };
 createUserNames(accounts);
@@ -113,22 +112,29 @@ btnLogin.addEventListener('click',function(e){
     }
   )
     if(currentAccount?.pin===Number(inputLoginPin.value)){
-      // console.log('login');
 
       labelWelcome.textContent=`Welcome back ${currentAccount.owner.split(' ')[0]}`
       containerApp.style.opacity=100;
       inputLoginPin.value='';
       inputLoginUsername.value='';
+      inputLoginPin.blur();
+
       displayMovements(currentAccount.movements);
       calcDisplayBalance(currentAccount.movements);
-      calcDisplaySummary(currentAccount.movements);
+      calcDisplaySummary(currentAccount);
 
 
     }
 
+});
 
-// console.log(currentAccount);
-
+btnTransfer.addEventListener('click',function(e){
+  e.preventDefault();
+      const amount=Number(inputTransferAmount.value);
+      const receiverAcc=accounts.find(function(account){
+        return account.username===inputTransferTo.value;
+      });
+      // console.log(receiverAcc);
 });
 
 /////////////////////////////////////////////////
