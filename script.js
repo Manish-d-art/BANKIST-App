@@ -106,6 +106,27 @@ const createUserNames=function(accs){
   });
 };
 createUserNames(accounts);
+
+let currentAccount;
+btnLogin.addEventListener('click',function(e){
+  e.preventDefault();
+  currentAccount=accounts.find(
+    function(acc){
+      return(acc.username===inputLoginUsername.value);
+    }
+  )
+    if(currentAccount?.pin===Number(inputLoginPin.value)){
+      // console.log('login');
+      labelWelcome.textContent=`Welcome back ${currentAccount.owner.split(' ')[0]}`
+    containerApp.style.opacity=100;
+
+    }
+
+
+// console.log(currentAccount);
+
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
