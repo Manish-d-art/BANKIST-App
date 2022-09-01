@@ -182,6 +182,34 @@ btnClose.addEventListener('click',function(e){
 
   }
 });
+
+const accountMovements=accounts.map(function(acc){
+  return acc.movements;
+});
+console.log(accountMovements);
+const allMovements=accountMovements.flat();
+console.log(allMovements)
+const overallBalance=allMovements.reduce (function(acc,ele){
+    return acc+ele;
+    console.log(overallBalance);
+},0);
+
+
+let sorted=false;
+btnSort.addEventListener('click',function(e){
+  e.preventDefault();
+
+})
+
+
+// const arr=account1.movements;
+// console.log(arr); 
+
+// arr.sort(function(a,b){
+//   return b-a;
+// })
+// console.log(arr);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
