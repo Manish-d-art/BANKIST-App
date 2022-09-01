@@ -90,7 +90,7 @@ const calcDisplaySummary=function(account){
   labelSumOut.textContent=`${Math.abs(out)}€`;
 
   const interest=account.movements.filter(mov =>mov>0).map(deposit =>(deposit*account.interestRate)/100).filter((int,i,arr)=>{
-    return int>=1
+    return int>=1;
   }).reduce((acc,int)=> acc+int,0);
   labelSumInterest.textContent=`${interest}€`;
 };
@@ -142,17 +142,17 @@ btnTransfer.addEventListener('click',function(e){
       const receiverAcc=accounts.find(function(account){
         return account.username===inputTransferTo.value;
       });
-      console.log(currentAccount);
+      // console.log(currentAccount);
       inputTransferAmount.value=inputTransferTo.value='';
       if(amount>0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
         //doing transfer
         currentAccount.movements.push(-amount);
         receiverAcc.movements.push(amount);
-        console.log('man');
+        // console.log('man');
         //update UI
         updateUI(currentAccount);
       }
-      console.log(amount,receiverAcc);
+      // console.log(amount,receiverAcc);
 });
 
 btnLoan.addEventListener('click',function(e){
@@ -176,7 +176,7 @@ btnClose.addEventListener('click',function(e){
     const index=accounts.findIndex(function(account){
       return account.username===currentAccount.username;
     });
-    console.log(index);
+    // console.log(index);
     accounts.splice(index,1);
     containerApp.style.opacity=0;
     inputCloseUsername.value=inputClosePin.value='';
@@ -184,16 +184,16 @@ btnClose.addEventListener('click',function(e){
   }
 });
 
-const accountMovements=accounts.map(function(acc){
-  return acc.movements;
-});
-console.log(accountMovements);
-const allMovements=accountMovements.flat();
-console.log(allMovements)
-const overallBalance=allMovements.reduce (function(acc,ele){
-    return acc+ele;
-    console.log(overallBalance);
-},0);
+// const accountMovements=accounts.map(function(acc){
+//   return acc.movements;
+// });
+// console.log(accountMovements);
+// const allMovements=accountMovements.flat();
+// console.log(allMovements)
+// const overallBalance=allMovements.reduce (function(acc,ele){
+//     return acc+ele;
+//     console.log(overallBalance);
+// },0);
 
 
 let sorted=false;
@@ -203,6 +203,9 @@ btnSort.addEventListener('click',function(e){
   sorted=!sorted;
 
 })
+
+
+
 
 
 // const arr=account1.movements;
