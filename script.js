@@ -62,6 +62,16 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
+
+//date
+const now = new Date();
+const day=now.getDate();
+const month=now.getMonth();
+const year=now.getFullYear();
+const hour=now.getHours();
+const min=now.getMinutes();
+labelDate.textContent=`${day}/${month}/${year}, ${hour}:${min}`;
+
 const displayMovements=function(movements,sort=false){
   const movs=sort?movements.slice().sort(function(a,b){return a-b}):movements;
   containerMovements.innerHTML='';
