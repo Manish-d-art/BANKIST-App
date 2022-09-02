@@ -64,12 +64,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 
 //date
-const now = new Date();
-const day=now.getDate();
-const month=now.getMonth();
-const year=now.getFullYear();
-const hour=now.getHours();
-const min=now.getMinutes();
+const date=new Date();
+const day=`${date.getDate()}`.padStart(2,0);
+const month=`${(date.getMonth()+1)}`.padStart(2,0);
+const year=date.getFullYear();
+const hour=`${date.getHours()}`.padStart(2,0);
+const min=`${date.getMinutes()}`.padStart(2,0);
 labelDate.textContent=`${day}/${month}/${year}, ${hour}:${min}`;
 
 const displayMovements=function(movements,sort=false){
@@ -158,11 +158,12 @@ btnTransfer.addEventListener('click',function(e){
         //doing transfer
         currentAccount.movements.push(-amount);
         receiverAcc.movements.push(amount);
-        // console.log('man');
+         //transfer date
+        currentAccount.movementsDate.push(new Date().toISOString());
+        receiverAcc.movementsDate.push(new Date().toISOString());
         //update UI
         updateUI(currentAccount);
       }
-      // console.log(amount,receiverAcc);
 });
 
 btnLoan.addEventListener('click',function(e){
@@ -172,7 +173,8 @@ btnLoan.addEventListener('click',function(e){
     return mov >= amount/10;
   })){
     currentAccount.movements.push(amount);
-
+     //loan date
+     currentAccount.movementsDate.push(new Date().toISOString());
     updateUI(currentAccount);
     inputLoanAmount.value='';
   }
