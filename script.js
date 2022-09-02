@@ -247,11 +247,14 @@ btnLoan.addEventListener('click' ,function(e){
     if(amount>0 && currentAccount.movements.some(function(mov){
         return mov>=amount/10;
     })){
+
+      setTimeout(function(){
         currentAccount.movements.push(amount)
-         //loan date
-         currentAccount.movementsDate.push(new Date().toISOString());
-        updateUI(currentAccount);
-        inputLoanAmount.value='';
+        //loan date
+        currentAccount.movementsDate.push(new Date().toISOString());
+       updateUI(currentAccount);
+       inputLoanAmount.value='';
+      },2500);
        
     }
 
