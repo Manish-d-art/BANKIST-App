@@ -193,6 +193,24 @@ const updateUI=function(account){
     calcDisplayBalance(account);
 }
 
+const startLogOutTimer=function(){
+  let time=20;
+  const timer=function(){
+      const min=String(Math.trunc(time/60)).padStart(2,'0');
+      const sec=String(time%60).padStart(2,'0');
+      labelTimer.textContent=`${min}:${sec}`;
+     
+      if(time===0){
+          clearInterval(timer);
+          labelWelcome.textContent='Log in to get started';
+          containerApp.style.opacity=0;
+      }
+      time--;
+  };
+  timer();
+  const tick=setInterval(timer,1000);
+}
+startLogOutTimer();
 
 let currentAccount;
 btnLogin.addEventListener('click' ,function(e){
