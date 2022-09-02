@@ -210,7 +210,7 @@ const startLogOutTimer=function(){
   timer();
   const tick=setInterval(timer,1000);
 }
-startLogOutTimer();
+
 
 let currentAccount;
 btnLogin.addEventListener('click' ,function(e){
@@ -226,7 +226,8 @@ btnLogin.addEventListener('click' ,function(e){
         inputLoginUsername.value=inputLoginPin.value="";
         inputLoginPin.blur();
         updateUI(currentAccount);
-       
+        //timer log Out
+        startLogOutTimer();
     }
 
 });
