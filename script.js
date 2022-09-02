@@ -209,10 +209,11 @@ const startLogOutTimer=function(){
   };
   timer();
   const tick=setInterval(timer,1000);
+  return tick;
 }
 
 
-let currentAccount;
+let currentAccount,tick;
 btnLogin.addEventListener('click' ,function(e){
     e.preventDefault();
     currentAccount=accounts.find(function(acc){
@@ -256,6 +257,8 @@ if(receiverAcc && currentAccount.balance>0 && currentAccount.balance>=amount && 
     receiverAcc.movementsDate.push(new Date().toISOString());
     displayMovements(currentAccount);
     updateUI(currentAccount);
+    clearInterval(timer);
+    startLogOutTimer();
 } 
 });
 
