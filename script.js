@@ -157,7 +157,7 @@ btnTransfer.addEventListener('click',function(e){
 
 btnLoan.addEventListener('click',function(e){
   e.preventDefault();
-  const amount=Number(inputLoanAmount.value);
+  const amount=Math.floor(inputLoanAmount.value);
   if(amount>0 && currentAccount.movements.some(function(mov){
     return mov >= amount/10;
   })){
