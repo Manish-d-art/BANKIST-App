@@ -10,6 +10,17 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+  movementsDate:[
+    '2019-11-18T21:31:17.178z',
+    '2019-12-23T07:42:02.383z',
+    '2020-01-28T09:15:04.904z',
+    '2020-04-01T10:17:24.185z',
+    '2020-05-08T14:11:59.604z',
+    '2020-05-27T17:01:17.194z',
+    '2020-07-11T23:36:17.929z',
+    '2020-07-12T10:51:36.1790z',
+  ],
+
 };
 
 const account2 = {
@@ -17,6 +28,16 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+  movementsDate:[
+    '2019-11-18T21:31:17.178z',
+    '2019-12-23T07:42:02.383z',
+    '2020-01-28T09:15:04.904z',
+    '2020-04-01T10:17:24.185z',
+    '2020-05-08T14:11:59.604z',
+    '2020-05-27T17:01:17.194z',
+    '2020-07-11T23:36:17.929z',
+    '2020-07-12T10:51:36.1790z',
+  ],
 };
 
 const account3 = {
@@ -24,6 +45,16 @@ const account3 = {
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
+  movementsDate:[
+    '2019-11-18T21:31:17.178z',
+    '2019-12-23T07:42:02.383z',
+    '2020-01-28T09:15:04.904z',
+    '2020-04-01T10:17:24.185z',
+    '2020-05-08T14:11:59.604z',
+    '2020-05-27T17:01:17.194z',
+    '2020-07-11T23:36:17.929z',
+    '2020-07-12T10:51:36.1790z',
+  ],
 };
 
 const account4 = {
@@ -31,6 +62,13 @@ const account4 = {
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
+  movementsDate:[
+    '2019-11-18T21:31:17.178z',
+    '2019-12-23T07:42:02.383z',
+    '2020-01-28T09:15:04.904z',
+    '2020-04-01T10:17:24.185z',
+    '2020-05-08T14:11:59.604z',
+  ],
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -62,182 +100,179 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 
-
-//date
-const date=new Date();
-const day=`${date.getDate()}`.padStart(2,0);
-const month=`${(date.getMonth()+1)}`.padStart(2,0);
-const year=date.getFullYear();
-const hour=`${date.getHours()}`.padStart(2,0);
-const min=`${date.getMinutes()}`.padStart(2,0);
-labelDate.textContent=`${day}/${month}/${year}, ${hour}:${min}`;
-
-const displayMovements=function(movements,sort=false){
-  const movs=sort?movements.slice().sort(function(a,b){return a-b}):movements;
-  containerMovements.innerHTML='';
-    movs.forEach(function(mov,i){
-      const type=mov>0?'deposit':'withdrawal';
-      const html = `
-      <div class="movements__row">
-      <div class="movements__type movements__type--${type}">${i+1} ${type}</div>
-      <div class="movements__value">${mov}€</div>
-    </div>
-      `;
-      containerMovements.insertAdjacentHTML('afterbegin',html);
-    });
-};
-
-const calcDisplayBalance=function(movements){
-  currentAccount.balance=movements.reduce((acc,mov) => acc+mov,0);
-  labelBalance.textContent=`${currentAccount.balance} EUR`;
-}
-
-const calcDisplaySummary=function(account){
-  const income=account.movements.filter(mov => mov>0).reduce((acc,mov) => acc+mov,0);
-  labelSumIn.textContent=`${income}€`; 
-
-  const out=account.movements.filter(mov =>mov<0).reduce((acc,mov) => acc+mov,0);
-  labelSumOut.textContent=`${Math.abs(out)}€`;
-
-  const interest=account.movements.filter(mov =>mov>0).map(deposit =>(deposit*account.interestRate)/100).filter((int,i,arr)=>{
-    return int>=1;
-  }).reduce((acc,int)=> acc+int,0);
-  labelSumInterest.textContent=`${interest}€`;
-};
-
-
-
 const createUserNames=function(accs){
-  accs.forEach(function(acc){
-    acc.username=acc.owner.toLowerCase().split(' ').map(name => name[0]).join('');
-  });
-};
+    accs.forEach(function(acc){
+        acc.username=acc.owner.toLowerCase().split(' ').map(function(name){
+            return name[0];
+        }).join('');
+    })
+   
+}
 createUserNames(accounts);
 
 
-const updateUI=function(account){
-    displayMovements(account.movements);
-    calcDisplayBalance(account.movements);
-    calcDisplaySummary(account);
-      
+const formatMovementsDate=function(date){
+    const calcDaysPassed=(date1,date2) =>Math.round(Math.abs(date2-date1)/(1000*60*60*24)); 
+    const daysPassed=calcDaysPassed(new Date(),date);
+
+    if(daysPassed===0) return 'Today';
+    if(daysPassed===1) return 'yesterday';
+    if(daysPassed<=7) return `${daysPassed} days ago`; 
+    else{
+        const day=`${date.getDate()}`.padStart(2,0);
+        const month=`${date.getMonth()+1}`.padStart(2,0);
+        const year=date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+}
+
+const displayMovements=function(currentAccount,sorted=false){
+    const movs=sorted?currentAccount.movements.slice().sort(function(a,b){ return a-b;}):currentAccount.movements;
+    containerMovements.innerHTML='';
+    let i=0;
+    for(const mov of movs){
+
+        //date
+        const date=new Date(currentAccount.movementsDate[i]);
+        const displayDate=formatMovementsDate(date);
+        console.log(displayDate);
+        const type=mov>0?'deposit':'withdrawal';
+        const html=`
+        <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${i+1} ${type}</div>
+        <div class="movements__date">${displayDate}</div>
+        <div class="movements__value">${mov}€</div>
+      </div>
+        `;
+        ++i;
+        containerMovements.insertAdjacentHTML('afterbegin',html);
+    }
+};
+
+const calcDisplaySummary=function(account){
+    const income=account.movements.filter(function(mov){
+        return mov>0;
+    }).reduce(function(acc,mov){
+        return acc+mov;
+    },0);
+    // console.log(income);
+    labelSumIn.textContent=`${income}€`;
+
+    const out=account.movements.filter(function(mov){
+        return mov<0;
+    }).reduce(function(acc,mov){
+        return acc+mov;
+    },0);
+    labelSumOut.textContent=`${Math.abs(out)}€`;
+
+    const interest=account.movements.filter(function(mov){
+        return mov>0;
+    }).map(function(deposit){
+       return deposit*account.interestRate/100;
+    }).filter(function(intrst){
+        return intrst>=1;
+    }).reduce(function(acc,int){
+        return acc+int;
+    },0);
+    console.log(interest);
+    labelSumInterest.textContent=`${interest}€`;
 
 }
 
+const calcDisplayBalance=function(account){
+    currentAccount.balance=account.movements.reduce(function(acc,mov){
+        return acc+mov;
+    },0);
+    labelBalance.textContent=`${currentAccount.balance} EUR`;
+
+}
+
+const updateUI=function(account){
+    displayMovements(account);
+    calcDisplaySummary(account);
+    calcDisplayBalance(account);
+}
+
+
 let currentAccount;
-btnLogin.addEventListener('click',function(e){
-  e.preventDefault();
-  currentAccount=accounts.find(
-    function(acc){
-      return(acc.username===inputLoginUsername.value);
-    }
-  )
-    if(currentAccount?.pin===Number(inputLoginPin.value)){
-
-      labelWelcome.textContent=`Welcome back ${currentAccount.owner.split(' ')[0]}`
-      containerApp.style.opacity=100;
-      inputLoginPin.value='';
-      inputLoginUsername.value='';
-      inputLoginPin.blur();
-
-      updateUI(currentAccount);
-
-
-    }
-
-});
-
-btnTransfer.addEventListener('click',function(e){
-  e.preventDefault();
-      const amount=Number(inputTransferAmount.value);
-      const receiverAcc=accounts.find(function(account){
-        return account.username===inputTransferTo.value;
-      });
-      // console.log(currentAccount);
-      inputTransferAmount.value=inputTransferTo.value='';
-      if(amount>0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
-        //doing transfer
-        currentAccount.movements.push(-amount);
-        receiverAcc.movements.push(amount);
-         //transfer date
-        currentAccount.movementsDate.push(new Date().toISOString());
-        receiverAcc.movementsDate.push(new Date().toISOString());
-        //update UI
-        updateUI(currentAccount);
-      }
-});
-
-btnLoan.addEventListener('click',function(e){
-  e.preventDefault();
-  const amount=Math.floor(inputLoanAmount.value);
-  if(amount>0 && currentAccount.movements.some(function(mov){
-    return mov >= amount/10;
-  })){
-    currentAccount.movements.push(amount);
-     //loan date
-     currentAccount.movementsDate.push(new Date().toISOString());
-    updateUI(currentAccount);
-    inputLoanAmount.value='';
-  }
-})
-
-
-
-btnClose.addEventListener('click',function(e){
-  e.preventDefault();
-  if(inputCloseUsername.value===currentAccount.username && Number(inputClosePin.value)===currentAccount.pin){
-    const index=accounts.findIndex(function(account){
-      return account.username===currentAccount.username;
+btnLogin.addEventListener('click' ,function(e){
+    e.preventDefault();
+    currentAccount=accounts.find(function(acc){
+        return (acc.username === inputLoginUsername.value) ;
     });
-    // console.log(index);
-    accounts.splice(index,1);
-    containerApp.style.opacity=0;
-    inputCloseUsername.value=inputClosePin.value='';
 
-  }
+    console.log(currentAccount);
+    if(Number(inputLoginPin.value) === currentAccount?.pin){
+        labelWelcome.textContent=`Welcome back ${currentAccount.owner.split(' ')[0]}`;
+        containerApp.style.opacity=1;
+        inputLoginUsername.value=inputLoginPin.value="";
+        inputLoginPin.blur();
+        updateUI(currentAccount);
+       
+    }
+
 });
-
-// const accountMovements=accounts.map(function(acc){
-//   return acc.movements;
-// });
-// console.log(accountMovements);
-// const allMovements=accountMovements.flat();
-// console.log(allMovements)
-// const overallBalance=allMovements.reduce (function(acc,ele){
-//     return acc+ele;
-//     console.log(overallBalance);
-// },0);
-
 
 let sorted=false;
 btnSort.addEventListener('click',function(e){
-  e.preventDefault();
-  displayMovements(currentAccount.movements, !sorted);
-  sorted=!sorted;
-
+    e.preventDefault();
+    displayMovements(currentAccount,!sorted);
+    sorted=!sorted;
+    
 })
 
 
+btnTransfer.addEventListener('click',function(e){
+    e.preventDefault();
+    const amount=Number(inputTransferAmount.value);
+    const receiverAcc=accounts.find(function(acc){
+        return acc.username === inputTransferTo.value;
+    })
+    // console.log(receiverAcc);
+if(receiverAcc && currentAccount.balance>0 && currentAccount.balance>=amount && currentAccount.username !== receiverAcc?.username && receiverAcc.username ){
+    receiverAcc.movements.push(amount);
+    currentAccount.movements.push(-amount);
+    //transfer date
+    currentAccount.movementsDate.push(new Date().toISOString());
+    receiverAcc.movementsDate.push(new Date().toISOString());
+    displayMovements(currentAccount);
+    updateUI(currentAccount);
+} 
+});
+
+
+btnLoan.addEventListener('click' ,function(e){
+    e.preventDefault();
+    const amount=Math.floor(inputLoanAmount.value);
+    if(amount>0 && currentAccount.movements.some(function(mov){
+        return mov>=amount/10;
+    })){
+        currentAccount.movements.push(amount)
+         //loan date
+         currentAccount.movementsDate.push(new Date().toISOString());
+        updateUI(currentAccount);
+        inputLoanAmount.value='';
+       
+    }
+
+})
+
+btnClose.addEventListener('click',function(e){
+    e.preventDefault();
+    if(inputCloseUsername.value!=='' && inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value)===currentAccount.pin){
+        const index=accounts.findIndex(function(account){
+            return account.username === currentAccount.username;
+        })
+     accounts.splice(index,1);
+    containerApp.style.opacity=0;
+    inputCloseUsername.value=inputClosePin.value='';
+    }
+    
+})
+
+const now = new Date(0);
+console.log(now);
 
 
 
-// const arr=account1.movements;
-// console.log(arr); 
 
-// arr.sort(function(a,b){
-//   return b-a;
-// })
-// console.log(arr);
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// LECTURES
-
-// const currencies = new Map([
-//   ['USD', 'United States dollar'],
-//   ['EUR', 'Euro'],
-//   ['GBP', 'Pound sterling'],
-// ]);
-
-// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-
-/////////////////////////////////////////////////
