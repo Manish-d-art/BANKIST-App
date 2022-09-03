@@ -206,7 +206,7 @@ const startLogOutTimer=function(){
         }
         time--;
     };
-    let time=300;
+    let time=20;
     timer();
     const tick=setInterval(timer,1000);
     return tick;
@@ -259,7 +259,7 @@ if(receiverAcc && currentAccount.balance>0 && currentAccount.balance>=amount && 
     receiverAcc.movementsDate.push(new Date().toISOString());
     displayMovements(currentAccount);
     updateUI(currentAccount);
-    clearInterval(timer);
+    clearInterval(tick);
     startLogOutTimer();
 } 
 });
@@ -278,7 +278,7 @@ btnLoan.addEventListener('click' ,function(e){
         currentAccount.movementsDate.push(new Date().toISOString());
        updateUI(currentAccount);
        inputLoanAmount.value='';
-       clearInterval(timer);
+       clearInterval(tick);
         startLogOutTimer();
       },2500);
        
